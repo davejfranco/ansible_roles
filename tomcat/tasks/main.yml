@@ -1,0 +1,24 @@
+
+---
+
+
+#Install tomcat7 and tomcat7 admin
+- name: Install Tomcat7
+  apt: name=tomcat7 state=present
+
+- name: Install Tomcat7 admin
+  apt: name=tomcat7-admin state=present
+
+#Provides a tomcat-user specific for blancride
+- name: Copy tomcat-users.xml
+  template:
+   src=tomcat-users.xml.j2
+   dest=/etc/tomcat7/tomcat-users.xml
+
+#Provides and specific defaults parameters of tomcat7 for blancride.
+- name: Modify /default/tomcat7
+  copy:
+   src=tomcat7
+   dest=/etc/default/tomcat7
+  notify:
+   - tomcat-restart
