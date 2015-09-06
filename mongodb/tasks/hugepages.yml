@@ -1,0 +1,12 @@
+---
+
+#This script is meant to Disable transparent huge pages warning on MongoDB 3.0
+
+- name: copy file 
+  copy: src=disable-transparent-hugepages dest=/etc/init.d/disable-transparent-hugepages mode=755
+
+- name: make script run on boot
+  command: sudo update-rc.d disable-transparent-hugepages defaults
+
+- name: reboot server to apply changes
+  shell: shutdown -r now

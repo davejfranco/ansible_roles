@@ -1,0 +1,9 @@
+---
+#Mongodb installation
+- include: installation.yml
+
+#init script for mongodb
+- include: mongo_init.yml
+
+#Avoid trnasparent hupages
+- include: hugepages.yml

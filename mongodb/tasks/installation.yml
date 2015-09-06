@@ -1,0 +1,37 @@
+---
+
+- name: Adding APT key
+  apt_key:
+    id: 7F0CEB10
+    url: http://docs.mongodb.org/10gen-gpg-key.asc
+
+- name: Add APT repository
+  apt_repository:
+    repo: "deb http://repo.mongodb.org/apt/ubuntu {{ ansible_distribution_release }}/mongodb-org/3.0 multiverse"
+    update_cache: yes
+
+- name: Installing package
+  apt:
+    pkg: mongodb-org
+    state: present
+
+#Provide a specific mongodb configuration file
+- name: MongoDB | Push default configuration template
+  template:
+    src=mongod.conf.j2
+    dest=/etc/mongod.conf
+    owner=root group=root mode=0644
+
+- name: create a mongodb directory
+  file: path=/etc/mongodb.d state=directory
+
+- name: copy mongodb keyfile
+  copy: 
+    src=mongodb-keyfile 
+    dest=/etc/mongodb.d/ mode=600 owner=mongodb group=mongodb
+
+- name: remove mongodb lock
+  file: path=/var/lib/mongodb/mongod.lock state=absent
+
+- name: MongoDB | ensure deamon is running correctly
+  service: name=mongod state=restarted

@@ -1,0 +1,7 @@
+---
+
+- name: Copy init script
+  copy: src=mongo dest=/etc/init.d/mongo mode=644
+
+- name: run update-rc
+  command: update-rc.d mongo defaults
