@@ -1,0 +1,9 @@
+##Default values for wordpress
+
+---
+
+domain: "domain"
+db_name: "domain"
+db_user: "admin"
+db_password: "admin"
+wordpress_name: "wordpress-site"

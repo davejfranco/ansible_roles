@@ -1,0 +1,47 @@
+---
+
+#
+- name: Ensure /var/www exists
+  file: path=/var/www state=directory
+
+- name: Download wordpress
+  #get_url: url=https://wordpress.org/latest.tar.gz dest=/home/{{user}}/
+  get_url: url=https://wordpress.org/latest.tar.gz dest=/home/ansible/
+
+- name: Decompress wordpress
+  #shell: tar xvf /home/{{user}}/wordpress-4.2.2.tar.gz
+  #unarchive: src="/var/www/wordpress-4.2.2.tar.gz" dest="/var/www/"
+  command: "tar xvf wordpress-4.2.2.tar.gz" 
+  #command: "tar xvf latest.tar.gz" 
+
+- name: cp wordpress directory 
+  command: "sudo cp -R wordpress /var/www"
+
+- name: Remove wp-config-sample.php
+  #file: path=/home/{{user}}/wordpress/wp-config-sample.php state=absent
+  file: path=/var/www/wordpress/wp-config-sample.php state=absent
+
+- name: Add wp-config.php
+  template: 
+   src=wp-config.php.j2
+   dest=/var/www/wordpress/wp-config.php
+  #dest=/home/{{user}}/wordpress/wp-config.php
+
+- name: Rename Wordpress
+  command: mv /var/www/wordpress /var/www/{{wordpress_name}}
+#It will create a directory with a specific domain name.
+#- name: create directory for wordpress site
+#  file: path=/var/www/{{domain}}.com owner=www-data group=www-data state=directoryz
+
+- name: remove default root directory
+  shell: rm -rf /var/www/html
+
+#It changes all the privileges recursively of the new directory 
+- name: Change priviledges on wordpress site
+  file:
+   path=/var/www/{{wordpress_name}}
+   mode=775
+   owner=www-data
+   group=www-data
+   recurse=yes
+   state=directory
